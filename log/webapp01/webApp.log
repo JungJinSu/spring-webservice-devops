@@ -1,0 +1,2 @@
+2019-04-06 07:46:26,879 INFO c.j.w.w.u.m.HealthController [http-nio-8080-exec-3] GET / 200 OK
+2019-04-06 08:12:31,048 INFO c.j.w.w.u.m.HealthController [http-nio-8080-exec-1] GET / 200 OK

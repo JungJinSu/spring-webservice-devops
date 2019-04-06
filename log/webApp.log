@@ -1,5 +1,0 @@
-2019-04-05 21:48:29,703 INFO c.j.w.w.u.m.MessageController [http-nio-8080-exec-3] Created Message{id=1, text='rrr', summary='test', created=Fri Apr 05 21:48:29 KST 2019}
-2019-04-05 21:48:41,196 INFO c.j.w.w.u.m.MessageController [http-nio-8080-exec-5] ID-[1] Message Deleted 
-2019-04-05 21:49:23,915 INFO c.j.w.w.u.m.MessageController [http-nio-8080-exec-3] Created Message{id=1, text='ttt', summary='test', created=Fri Apr 05 21:49:23 KST 2019}
-2019-04-05 21:49:27,649 INFO c.j.w.w.u.m.MessageController [http-nio-8080-exec-5] ID : [1] msg Modified 
-2019-04-05 21:49:36,994 INFO c.j.w.w.u.m.MessageController [http-nio-8080-exec-6] Created Message{id=1, text='tttrrr', summary='test', created=Fri Apr 05 21:49:36 KST 2019}

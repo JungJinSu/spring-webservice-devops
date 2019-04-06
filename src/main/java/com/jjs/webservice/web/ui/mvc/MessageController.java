@@ -32,14 +32,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 /**
  * @author Rob Winch
  * @author Doo-Hwan Kwak
  */
 @Controller
 @RequestMapping("/")
-public class MessageController {
+public class MessageController{
 
 	private static Logger logger = LogManager.getLogger(MessageController.class);
 	private final MessageRepository messageRepository;

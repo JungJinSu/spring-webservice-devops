@@ -1,0 +1,1 @@
+2019-04-06 04:44:25,489 INFO c.j.w.w.u.m.MessageController [http-nio-8080-exec-5] Created Message{id=1, text='02', summary='02', created=Sat Apr 06 04:44:25 UTC 2019}
