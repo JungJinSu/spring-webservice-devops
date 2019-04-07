@@ -1,5 +1,4 @@
 #! /usr/bin/env bash
-SCRIPTPATH=$(pwd)
 cd ../build
 TARGETPATH=$(pwd)
 cd ../
@@ -37,20 +36,18 @@ deploy() {
   echo
   echo "Strartig Deploy Web App."
 
-  echo "======[01] Build Java File As gradle...."
+  echo "======[01] Build Java File...."
   gradle build -b $BASEPATH/build.gradle
 
   echo "======[02] Build Docker File... "
-  docker build $TARGETPATH -t webapp:latest
+  cd $TARGETPATH
+  docker build -f DockerfileWebApp -t webapp:latest .
+  #docker build -f $TARGETPATH/DockerfileNginx -t nginx:devops .
 
   # restart on changed docker images.
   stop
   start
-  
-
 }
-
-
 
 case "$1" in
   start)
@@ -69,6 +66,6 @@ case "$1" in
     deploy
     ;;
 *)
-  echo "Usage: $0 {start | stop | restart | status | deploy | install}"
+  echo "Usage: $0 {start | stop | restart | status | deploy}"
 esac
 exit 0

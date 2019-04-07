@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN" name="MyApp">
     <Appenders>
-        <RollingRandomAccessFile name="LogApp" fileName="log/webApp.log" filePattern="log/webApp/webApp-%d{yyyy-MM-dd_HH}_%i.log" immediateFlush="false" append="true" ignoreExceptions="false">
+        <RollingRandomAccessFile name="LogApp" fileName="log/webApp.log" filePattern="log/webApp-%d{yyyy-MM-dd_HH}_%i.log" immediateFlush="false" append="true" ignoreExceptions="false">
             <PatternLayout>
                 <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
             </PatternLayout>
