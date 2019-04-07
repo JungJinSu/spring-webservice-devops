@@ -10,20 +10,33 @@ services:
     - ../nginx/log:/var/log/nginx
   ports:
     - 80:80
- 
+  depends_on:
+    - webapp01
+    - webapp02
+  networks:
+    - devopsnet
+
+
 # webapp 
  webapp01:
   image: webapp:latest
   container_name: webapp01
-  ports:
-    - 8080:8080
+  #ports:
+  #  - 8080:8080
   volumes:
     - ../log/webapp01:/src/log 
+  networks:
+    - devopsnet
 
  webapp02:
-   image: webapp:latest
-   container_name: webapp02
-   ports:
-     - 8081:8080
-   volumes:
-     - ../log/webapp02:/src/log
+  image: webapp:latest
+  container_name: webapp02
+  #ports:
+  #  - 8081:8080
+  volumes:
+    - ../log/webapp02:/src/log
+  networks:
+    - devopsnet
+
+networks:
+ devopsnet:
