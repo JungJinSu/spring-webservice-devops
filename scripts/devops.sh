@@ -42,11 +42,19 @@ deploy() {
   echo "======[02] Build Docker File... "
   cd $TARGETPATH
   docker build -f DockerfileWebApp -t webapp:latest .
-  #docker build -f $TARGETPATH/DockerfileNginx -t nginx:devops .
 
-  # restart on changed docker images.
-  stop
-  start
+  # Count Docker Services and Rolling restart
+  SERVICECOUNT=$(docker ps | grep webapp* | wc -l | grep -o "[0-9]\+")
+  echo "======[03] Rolling Restart WebApp docker service... [total : $SERVICECOUNT]"
+  for ((i=1;i<$SERVICECOUNT+1;i++));
+    do
+      #FIXME: scale in/out  된 상태에서 해당 컨테이터이름라벨 문제발생. -> count 개수가 아니라 컨테이너 이름 자체를 txt 파일로 저장해야함. 
+      echo "Restart.... webapp-$i "
+      docker stop webapp-$i
+      docker rm webapp-$i
+      docker-compose -f docker-compose.yml up -d webapp-$i
+  done
+
 }
 
 case "$1" in
