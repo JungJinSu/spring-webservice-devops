@@ -26,8 +26,8 @@ DevOps 프로젝트
     scale out  
     [01] docker-compose.yml  컨테이너 서비스 추가
       - 컨테이너 이름 규칙 : webapp-(숫자)  
-    [02] devops-nginx.conf   upstream 서버 제거/추가 
-    [03] docker
+    [02] devops-nginx.conf   upstream 서버 추가 
+    [03] devops.sh start     새로 추가한 컨테이너 시작
 
 
 #### 2. 무중단 배포 스크립트 동작
