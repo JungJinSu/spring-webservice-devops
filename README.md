@@ -16,29 +16,27 @@ DevOps 프로젝트
    ~~~
      
 ### 데모 시나리오   
-#### 1. Container scale in/out  
-    scale in 방법  
+#### 1. Container scale in/out 방법   
+    scale in  
     [01] docker-compose.yml  컨테이너 서비스 설정 제거
     [02] devops-nginx.conf   upstream 해당 서버 제거
     [03] docker stop [컨테이너 이름]
     [04] docker rm [컨테이너 이름]
     
-    scale out 방법  
+    scale out  
     [01] docker-compose.yml  컨테이너 서비스 추가
       - 컨테이너 이름 규칙 : webapp-(숫자)  
     [02] devops-nginx.conf   upstream 서버 제거/추가 
     [03] docker
 
 
-#### 2. 무중단 배포 
+#### 2. 무중단 배포 스크립트 동작
     
     ./devops.sh deploy  
     
-    동작 순서
     [01] 소스코드 빌드
     [02] 도커 이미지 빌드 
-    [03] 컨테이너 Rolling restart
-      -  요청 쿼리에 대한 무중단 서비스
+    [03] 컨테이너 Rolling restart 
 
 
 ---
@@ -59,7 +57,6 @@ DevOps 프로젝트
     : [webapp.log](https://github.com/JungJinSu/spring-webservice-devops/tree/master/log/webapp01)  
     
   5. Container scale in/out 가능해야 함  
-    : [AutoScaling]()
   
   6. 웹서버는 Nginx 사용  
  
