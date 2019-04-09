@@ -3,7 +3,7 @@ DevOps 프로젝트
  - 구동 환경 : docker-ce, docker-compose, gradle
  
 ## 1. 스크립트 실행방법   
- - 스크립트 파일 :  /spring-webservice-devops/scripts/[devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh)  
+ - 스크립트 파일 :  [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh)  
  
         ./devops.sh [start | stop | restart | status | deploy]  
         
@@ -114,15 +114,15 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
     
  1. scale in  
-    1. /spring-webservice-devops/build/[docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1) 대상 컨테이너 서비스 제거
-    2. /spring-webservice-devops/nginx/conf/[devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6) upstream 내에 대상 서버 정보 제거
+    1. [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1) 대상 컨테이너 서비스 제거
+    2. [/spring-webservice-devops/nginx/conf/devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6) upstream 내에 대상 서버 정보 제거
     3. docker stop "대상 컨테이너 이름"  
     4. docker rm "대상 컨테이너 이름" 
 
  2. scale out  
-    1. /spring-webservice-devops/build/[docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1) 컨테이너 서비스 추가     
-    2. /spring-webservice-devops/nginx/conf/[devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6)   upstream 서버 추가  
-    3. devops.sh start     새로 추가한 컨테이너 시작  
+    1. [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1) 컨테이너 서비스 추가     
+    2. [/spring-webservice-devops/nginx/conf/devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6)   upstream 서버 추가  
+    3. ./devops.sh start 컨테이너 시작  
       
 ## 3. 요구사항 결과    
 
@@ -132,34 +132,34 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
     : [spring-boot-sample-web-ui](https://github.com/spring-projects/spring-boot/tree/v2.0.2.RELEASE/spring-boot-samples/spring-boot-sample-web-ui)
          
   2. build script는 gradle로 작성   
-    : /spring-webservice-devops/[build.gradle](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build.gradle#L1)  
+    : [/spring-webservice-devops/build.gradle](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build.gradle#L1)  
  
   3. 어플리케이션들은 모두 독립적인 Container 로 구성  
-    : /spring-webservice-devops/build/[docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1)
+    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1)
      
   4. 어플리케이션들의 Log 는 Host 에 file 로 적재  
-    : /spring-webservice-devops/build/[docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L24)    
-    : /spring-webservice-devops/[log](https://github.com/JungJinSu/spring-webservice-devops/tree/master/log)  
+    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L24)    
+    : [/spring-webservice-devops/log](https://github.com/JungJinSu/spring-webservice-devops/tree/master/log)  
   
   5. Container scale in/out 가능해야 함  
-    : [Container scale in/out 방법](https://github.com/JungJinSu/spring-webservice-devops#1-container-scale-inout-%EB%B0%A9%EB%B2%95)
+    : [예제5. Container scale in/out 방법](https://github.com/JungJinSu/spring-webservice-devops#%EC%98%88%EC%A0%9C5-container-scale-inout-%EB%B0%A9%EB%B2%95)
   
   6. 웹서버는 Nginx 사용  
-    : /spring-webservice-devops/build/[docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L5)  
+    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L5)  
  
   7. 웹서버는 Reverse proxy 80 port, Round robin 방식으로 설정  
-    : [devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf)  
+    : [spring-webservice-devops/nginx/conf/devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6)  
     
   8.  무중단 배포 동작을 구현 (배포 방식에 제한 없음)  
-    : /spring-webservice-devops/scripts/[devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L35)  
+    : [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L35)  
    
   9. 실행스크립트 개발언어는 bash/python/go 선택하여 작성  
-    : /spring-webservice-devops/scripts/[devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L1)  
+    : [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L1)  
    
   10.  어플리케이션 REST API 추가  
      - [GET /health] Health check  
      - REST API 응답결과는 JSON Object 구현    
-     : /spring-webservice-devops/src/main/java/com/jjs/webservice/web/ui/mvc/[HealthController.java](https://github.com/JungJinSu/spring-webservice-devops/blob/master/src/main/java/com/jjs/webservice/web/ui/mvc/HealthController.java)  
+     : [/spring-webservice-devops/src/main/java/com/jjs/webservice/web/ui/mvc/HealthController.java](https://github.com/JungJinSu/spring-webservice-devops/blob/master/src/main/java/com/jjs/webservice/web/ui/mvc/HealthController.java)  
        
   11. README.md 파일에 프로젝트 실행 방법 명시 
 
