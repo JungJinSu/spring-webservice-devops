@@ -54,7 +54,15 @@ deploy() {
       docker rm webapp-$i
       docker-compose -f docker-compose.yml up -d webapp-$i
   done
-
+  
+  # exec Nginx Dokcer Containner & Signal Trasnmit 
+  echo "======[04] Nginx HUP Signal Transmit..."
+  docker container exec nginx nginx -s reload
+  echo " All Container Deploy Complieted!"
+  docker ps 
+  
+  #echo "Checking Reloaded Nginx conf File..."
+  #docker container exec nginx cat /etc/nginx/conf.d/default.conf
 }
 
 case "$1" in

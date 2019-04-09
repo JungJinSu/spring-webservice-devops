@@ -1,5 +1,6 @@
 DevOps 프로젝트  
 --
+ - 웹 어플리케이션을 Docker 를 통해 무중단 배포 서비스합니다. 
  - 구동 환경 : docker-ce, docker-compose, gradle
  
 ## 1. 스크립트 실행방법   
