@@ -2,5 +2,6 @@ FROM java:8
 COPY . /src
 WORKDIR /src
 ADD ./libs/spring-webservice-devops-0.0.1-SNAPSHOT.jar webapp.jar
+ADD version.txt .
 EXPOSE 8080
 CMD java -jar webapp.jar

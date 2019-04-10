@@ -10,6 +10,7 @@ start() {
   echo "Starting WebApp Docker Service..."
   docker-compose -f $TARGETPATH/docker-compose.yml up -d 
   docker ps
+  docker ps -a -q > $TARGETPATH/docker-scale-member.txt
 }
 
 stop() {
@@ -17,6 +18,7 @@ stop() {
   echo "Stopping All WebApp Docker Service.."
   docker-compose -f $TARGETPATH/docker-compose.yml down
   docker ps
+  docker ps -a -q > $TARGETPATH/docker-scale-member.txt
 }
 
 restart() {
@@ -24,6 +26,7 @@ restart() {
   echo "Restarting ALL WebApp Docker Service.."
   docker-compose -f $TARGETPATH/docker-compose.yml restart
   docker ps
+  docker ps -a -q > $TARGETPATH/docker-scale-member.txt
 }
 
 status() {
@@ -41,23 +44,39 @@ deploy() {
 
   echo "======[02] Build Docker File... "
   cd $TARGETPATH
-  docker build -f DockerfileWebApp -t webapp:latest .
+  version=`cat DockerBuildVersion.txt`
+  docker build -f DockerfileWebApp -t webapp:$version .
 
-  # Count Docker Services and Rolling restart
-  SERVICECOUNT=$(docker ps | grep webapp* | wc -l | grep -o "[0-9]\+")
-  echo "======[03] Rolling Restart WebApp docker service... [total : $SERVICECOUNT]"
-  for ((i=1;i<$SERVICECOUNT+1;i++));
+  # Nginx 가 구동중이지 않은 경우
+  NGINXCOUNT=$(docker ps -a -l -q | wc -l | grep -o "[0-9]\+")
+  
+  if [ ${NGINXCOUNT} = 0 ];
+  then
+    echo 
+    echo "==============Init All Server Starting ==================="
+    # 초기 배포인 경우 전체 서버 구동 
+    docker-compose -f docker-compose.yml up -d
+    docker ps -a -q > docker-scale-member.txt
+    exit 0
+  fi
+
+  # docker-scale-member.txt 파일 기준으로 Rolling Restart. Nginx 제외.    
+  WebAppContainerScale=$(cat docker-scale-member.txt | wc -l | grep -o "[0-9]\+")
+  NGINXCONTAINERID=$(docker ps -q -f "name=nginx")
+  echo "======[03] Rolling Restart WebApp docker service... [total : $WebAppContainerScale]"
+  cat docker-scale-member.txt |\
+  while read line
     do
-      #FIXME: scale in/out  된 상태에서 해당 컨테이터이름라벨 문제발생. -> count 개수가 아니라 컨테이너 이름 자체를 txt 파일로 저장해야함. 
-      echo "Restart.... webapp-$i "
-      docker stop webapp-$i
-      docker rm webapp-$i
-      docker-compose -f docker-compose.yml up -d webapp-$i
+     if ! [ $NGINXCONTAINERID == $line ];then
+        echo "Restarting.... WebAPP Container : $line"
+        docker restart $line
+     fi
   done
   
   # exec Nginx Dokcer Containner & Signal Trasnmit 
   echo "======[04] Nginx HUP Signal Transmit..."
   docker container exec nginx nginx -s reload
+  echo
   echo " All Container Deploy Complieted!"
   docker ps 
   

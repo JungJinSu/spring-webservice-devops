@@ -16,7 +16,7 @@ services:
 
 # webapp 
  webapp-1:
-  image: webapp:latest
+  image: webapp:1.0.0
   container_name: webapp-1
   #ports:
   #  - 8080:8080
@@ -26,7 +26,7 @@ services:
     - devopsnet
 
  webapp-2:
-  image: webapp:latest
+  image: webapp:1.0.0
   container_name: webapp-2
   #ports:
   #  - 8081:8080

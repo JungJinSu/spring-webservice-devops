@@ -20,48 +20,43 @@ DevOps 프로젝트
  - 동작 순서  
    1. 소스코드 빌드  
    2. 도커 이미지 빌드  
-   3. 웹 어플리케이션 컨테이너 Rolling restart  
+   3. 웹 어플리케이션 컨테이너 Rolling restart : latest버전(nginx)을 제외한 모든 컨테이너
    4. Nginx HUP 시그널 송신   
 ~~~
-./devops.sh deploy   
+./devops.sh deploy
 
 Strartig Deploy Web App.
 ======[01] Build Java File....
-Starting a Gradle Daemon (subsequent builds will be faster)
 
-BUILD SUCCESSFUL in 5s
+BUILD SUCCESSFUL in 0s
 3 actionable tasks: 3 up-to-date
 ======[02] Build Docker File...
-Sending build context to Docker daemon  40.24MB
-Step 1/6 : FROM java:8
+Sending build context to Docker daemon  40.25MB
+Step 1/7 : FROM java:8
  ---> d23bdf5b1b1b
-Step 2/6 : COPY . /src
- ---> 6958dd39f2db
-Step 3/6 : WORKDIR /src
- ---> Running in ae0a0589e56a
-Removing intermediate container ae0a0589e56a
- ---> 3eafe6f6d254
-Step 4/6 : ADD ./libs/spring-webservice-devops-0.0.1-SNAPSHOT.jar webapp.jar
- ---> 07b05b2df299
-Step 5/6 : EXPOSE 8080
- ---> Running in ace8f7600039
-Removing intermediate container ace8f7600039
- ---> 008ced57b164
-Step 6/6 : CMD java -Dspring.config.location=/resources/main/application.properties -jar webapp.jar
- ---> Running in df8479cbe4f3
-Removing intermediate container df8479cbe4f3
- ---> 98dd5889928c
-Successfully built 98dd5889928c
-Successfully tagged webapp:latest
-======[03] Rolling Restart WebApp docker service... [total : 2]
-Restart.... webapp-1
-webapp-1
-webapp-1
-Creating webapp-1 ... done
-Restart.... webapp-2
-webapp-2
-webapp-2
-Creating webapp-2 ... done
+Step 2/7 : COPY . /src
+ ---> Using cache
+ ---> f67aa180a54e
+Step 3/7 : WORKDIR /src
+ ---> Using cache
+ ---> 240c6ab8b6d2
+Step 4/7 : ADD ./libs/spring-webservice-devops-0.0.1-SNAPSHOT.jar webapp.jar
+ ---> Using cache
+ ---> 64ca0fe8d12f
+Step 5/7 : ADD version.txt .
+ADD failed: stat /var/lib/docker/tmp/docker-builder708043074/version.txt: no such file or directory
+======[03] Rolling Restart WebApp docker service... [total : 3]
+Restarting.... WebAPP Container : 1a89252596aa
+1a89252596aa
+Restarting.... WebAPP Container : 9357149cbe3d
+9357149cbe3d
+======[04] Nginx HUP Signal Transmit...
+
+ All Container Deploy Complieted!
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS                  PORTS                NAMES
+1a89252596aa        webapp:1.0.0        "/bin/sh -c 'java -j…"   9 minutes ago       Up 12 seconds           8080/tcp             webapp-2
+9357149cbe3d        webapp:1.0.0        "/bin/sh -c 'java -j…"   9 minutes ago       Up Less than a second   8080/tcp             webapp-1
+ca1b7750a571        nginx:latest        "nginx -g 'daemon of…"   9 minutes ago       Up 6 minutes            0.0.0.0:80->80/tcp   nginx
 ~~~
  
 
@@ -167,6 +162,4 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
  #### Todo List  
  
   1. scale in/out 으로 deploy 할 경우 rolling restart 컨테이터 이름 라벨 문제. -> count 개수가 아니라 컨테이너 이름 자체를 txt 파일로 w/r.
-  2. nginx signal hup
-  3. whitelabel page controller 
-  4. auto scaling : 스케일 인/아웃 자동화 스크립트  
+  2. auto scaling : 스케일 인/아웃 자동화 스크립트  
