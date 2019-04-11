@@ -1,9 +1,7 @@
 #! /usr/bin/env bash
-cd ../build
-TARGETPATH=$(pwd)
-cd ../
-BASEPATH=$(pwd)
-
+SCRIPTPATH=$(cd "$(dirname "$0")" && pwd)
+TARGETPATH=$(cd "${SCRIPTPATH}" && cd "../build" && pwd)
+BASEPATH=$(cd "${SCRIPTPATH}" && cd ".." && pwd)
 
 start() {
   echo

@@ -33,7 +33,7 @@ DevOps 프로젝트
   
  - [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh) 설명  
  
-        ./devops.sh [ deploy | stop |  start | restart | status ]  
+        $ ./devops.sh [ deploy | stop |  start | restart | status ]  
       
  - deploy : 웹어플리케이션 무중단 배포   
  - stop : 컨테이너 환경 전체 중지  
@@ -50,7 +50,7 @@ DevOps 프로젝트
    2. 도커 이미지 빌드  
    3. 웹 어플리케이션 컨테이너 Rolling restart. (nginx-proxy를 제외한 모든 컨테이너)   
 ~~~
-./devops.sh deploy
+$ ./devops.sh deploy
 
 Strartig Deploy Web App.
 ======[01] Build Java File....
@@ -89,7 +89,7 @@ ca1b7750a571        nginx:latest        "nginx -g 'daemon of…"   9 minutes ago
 
 #### 예제2. 컨테이너 환경 전체 중지    
 ~~~
-./devops.sh stop
+$ ./devops.sh stop
 
 Stopping All WebApp Docker Service..
 Stopping webapp-2 ... done
@@ -104,7 +104,7 @@ CONTAINER ID        IMAGE               COMMAND             CREATED             
 
 #### 예제3. 컨테이너 환경 전체 실행   
 ~~~
-./devops.sh start
+$ ./devops.sh start
 
 Starting WebApp Docker Service...
 Creating network "build_devopsnet" with the default driver
@@ -120,7 +120,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 #### 예제4. 컨테이너 환경 전체 재시작  
 
 ~~~
-./devops.sh restart
+$ ./devops.sh restart
 
 Restarting ALL WebApp Docker Service..
 Restarting webapp-2 ... done
@@ -136,18 +136,18 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 #### 예제5. Container scale in/out 
  - [docker-compose scale](https://docs.docker.com/compose/reference/scale/) 사용 
 #### 1. scale out  
-      docker ps
+      $ docker ps
       CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                NAMES
       2ff1f4b0f39c        jwilder/nginx-proxy   "/app/docker-entrypo…"   2 hours ago         Up 2 hours          0.0.0.0:80->80/tcp   nginx-proxy
       fbc82845a3cc        webapp:1.0.0          "/bin/sh -c 'java -j…"   2 hours ago         Up 2 hours          8080/tcp             build_webapp_1
       
-      docker-compose -f docker-compose.yml up -d --scale webapp=3
+      $ docker-compose -f ./build/docker-compose.yml up -d --scale webapp=3
       Starting build_webapp_1 ...
       Starting build_webapp_1 ... done
       Creating build_webapp_2 ... done
       Creating build_webapp_3 ... done
       
-      docker ps
+      $ docker ps
       CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                NAMES
       a84a153ae26c        webapp:1.0.0          "/bin/sh -c 'java -j…"   7 seconds ago       Up 5 seconds        8080/tcp             build_webapp_2
       f1189f50c54d        webapp:1.0.0          "/bin/sh -c 'java -j…"   7 seconds ago       Up 5 seconds        8080/tcp             build_webapp_3
@@ -155,13 +155,13 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
       fbc82845a3cc        webapp:1.0.0          "/bin/sh -c 'java -j…"   2 hours ago         Up 2 hours          8080/tcp             build_webapp_1
 #### 2. scale in
     
-    docker-compose -f docker-compose.yml up -d --scale webapp=1
+    $ docker-compose -f ./build/docker-compose.yml up -d --scale webapp=1
     Stopping and removing build_webapp_2 ...
     Stopping and removing build_webapp_2 ... done
     Stopping and removing build_webapp_3 ... done
     Starting build_webapp_1              ... done
     
-    docker ps
+    $ docker ps
     CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                NAMES
     2ff1f4b0f39c        jwilder/nginx-proxy   "/app/docker-entrypo…"   2 hours ago         Up 2 hours          0.0.0.0:80->80/tcp   nginx-proxy
     fbc82845a3cc        webapp:1.0.0          "/bin/sh -c 'java -j…"   2 hours ago         Up 2 hours          8080/tcp             build_webapp_1
