@@ -156,7 +156,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
     : [/spring-webservice-devops/log](https://github.com/JungJinSu/spring-webservice-devops/tree/master/log)  
   
   5. Container scale in/out 가능해야 함  
-    : [예제5. Container scale in/out 방법](https://github.com/JungJinSu/spring-webservice-devops#%EC%98%88%EC%A0%9C5-container-scale-inout-%EB%B0%A9%EB%B2%95)
+    : [예제5. Container scale in/out 방법](https://github.com/JungJinSu/spring-webservice-devops#%EC%98%88%EC%A0%9C5-container-scale-inout)
   
   6. 웹서버는 Nginx 사용  
     : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L5)  
