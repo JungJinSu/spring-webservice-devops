@@ -152,14 +152,14 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
     : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1)
      
   4. 어플리케이션들의 Log 는 Host 에 file 로 적재  
-    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L24)    
-    : [/spring-webservice-devops/log](https://github.com/JungJinSu/spring-webservice-devops/tree/master/log)  
+    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1)    
+    : [/spring-webservice-devops/logs](https://github.com/JungJinSu/spring-webservice-devops/tree/master/logs)  
   
   5. Container scale in/out 가능해야 함  
     : [예제5. Container scale in/out 방법](https://github.com/JungJinSu/spring-webservice-devops#%EC%98%88%EC%A0%9C5-container-scale-inout)
   
   6. 웹서버는 Nginx 사용  
-    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L5)  
+    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1)  
  
   7. 웹서버는 Reverse proxy 80 port, Round robin 방식으로 설정  
     : [spring-webservice-devops/nginx/conf/devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6)  
