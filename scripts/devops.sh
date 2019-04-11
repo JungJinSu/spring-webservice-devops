@@ -48,7 +48,7 @@ deploy() {
   docker build -f DockerfileWebApp -t webapp:$version .
 
   # Nginx 가 구동중이지 않은 경우
-  NGINXCOUNT=$(docker ps -a -l -q | wc -l | grep -o "[0-9]\+")
+  NGINXCOUNT=$(docker ps -q -f "name=nginx-proxy"| wc -l | grep -o "[0-9]\+")
   
   if [ ${NGINXCOUNT} = 0 ];
   then
@@ -56,13 +56,17 @@ deploy() {
     echo "==============Init All Server Starting ==================="
     # 초기 배포인 경우 전체 서버 구동 
     docker-compose -f docker-compose.yml up -d
+    # Container id Store.  
     docker ps -a -q > docker-scale-member.txt
     exit 0
   fi
 
+  # Container id Restore => Scale 된 경우id 변동이 생김. 
+  docker ps -a -q > docker-scale-member.txt
+  
   # docker-scale-member.txt 파일 기준으로 Rolling Restart. Nginx 제외.    
   WebAppContainerScale=$(cat docker-scale-member.txt | wc -l | grep -o "[0-9]\+")
-  NGINXCONTAINERID=$(docker ps -q -f "name=nginx")
+  NGINXCONTAINERID=$(docker ps -q -f "name=nginx-proxy")
   echo "======[03] Rolling Restart WebApp docker service... [total : $WebAppContainerScale]"
   cat docker-scale-member.txt |\
   while read line
@@ -73,15 +77,10 @@ deploy() {
      fi
   done
   
-  # exec Nginx Dokcer Containner & Signal Trasnmit 
-  echo "======[04] Nginx HUP Signal Transmit..."
-  docker container exec nginx nginx -s reload
+  #docker container exec nginx nginx -s reload
   echo
   echo " All Container Deploy Complieted!"
   docker ps 
-  
-  #echo "Checking Reloaded Nginx conf File..."
-  #docker container exec nginx cat /etc/nginx/conf.d/default.conf
 }
 
 case "$1" in

@@ -20,8 +20,7 @@ DevOps 프로젝트
  - 동작 순서  
    1. 소스코드 빌드  
    2. 도커 이미지 빌드  
-   3. 웹 어플리케이션 컨테이너 Rolling restart : latest버전(nginx)을 제외한 모든 컨테이너
-   4. Nginx HUP 시그널 송신   
+   3. 웹 어플리케이션 컨테이너 Rolling restart. (nginx-proxy를 제외한 모든 컨테이너)   
 ~~~
 ./devops.sh deploy
 
@@ -106,20 +105,39 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 
 ~~~
 
-#### 예제5. Container scale in/out 방법  
-
-    
- 1. scale in  
-    1. [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1) 대상 컨테이너 서비스 제거
-    2. [/spring-webservice-devops/nginx/conf/devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6) upstream 내에 대상 서버 정보 제거
-    3. docker stop "대상 컨테이너 이름"  
-    4. docker rm "대상 컨테이너 이름" 
-
- 2. scale out  
-    1. [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1) 컨테이너 서비스 추가     
-    2. [/spring-webservice-devops/nginx/conf/devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6)   upstream 서버 추가  
-    3. ./devops.sh start 컨테이너 시작  
+#### 예제5. Container scale in/out 
+ - [docker-compose scale](https://docs.docker.com/compose/reference/scale/) 옵션 사용 
+#### 1. scale out  
+      docker ps
+      CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                NAMES
+      2ff1f4b0f39c        jwilder/nginx-proxy   "/app/docker-entrypo…"   2 hours ago         Up 2 hours          0.0.0.0:80->80/tcp   nginx-proxy
+      fbc82845a3cc        webapp:1.0.0          "/bin/sh -c 'java -j…"   2 hours ago         Up 2 hours          8080/tcp             build_webapp_1
       
+      docker-compose -f docker-compose.yml up -d --scale webapp=3
+      Starting build_webapp_1 ...
+      Starting build_webapp_1 ... done
+      Creating build_webapp_2 ... done
+      Creating build_webapp_3 ... done
+      
+      docker ps
+      CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                NAMES
+      a84a153ae26c        webapp:1.0.0          "/bin/sh -c 'java -j…"   7 seconds ago       Up 5 seconds        8080/tcp             build_webapp_2
+      f1189f50c54d        webapp:1.0.0          "/bin/sh -c 'java -j…"   7 seconds ago       Up 5 seconds        8080/tcp             build_webapp_3
+      2ff1f4b0f39c        jwilder/nginx-proxy   "/app/docker-entrypo…"   2 hours ago         Up 2 hours          0.0.0.0:80->80/tcp   nginx-proxy
+      fbc82845a3cc        webapp:1.0.0          "/bin/sh -c 'java -j…"   2 hours ago         Up 2 hours          8080/tcp             build_webapp_1
+#### 2. scale in
+    
+    docker-compose -f docker-compose.yml up -d --scale webapp=1
+    Stopping and removing build_webapp_2 ...
+    Stopping and removing build_webapp_2 ... done
+    Stopping and removing build_webapp_3 ... done
+    Starting build_webapp_1              ... done
+    
+    docker ps
+    CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                NAMES
+    2ff1f4b0f39c        jwilder/nginx-proxy   "/app/docker-entrypo…"   2 hours ago         Up 2 hours          0.0.0.0:80->80/tcp   nginx-proxy
+    fbc82845a3cc        webapp:1.0.0          "/bin/sh -c 'java -j…"   2 hours ago         Up 2 hours          8080/tcp             build_webapp_1
+    
 ## 3. 요구사항 결과    
 
   - 웹 어플리케이션을 Docker 를 통해 서비스 하려합니다. 다음 요구사항에 부합하도록 설정, 빌드, 실행 스크립트를 구현해 주세요.  
@@ -159,7 +177,23 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
        
   11. README.md 파일에 프로젝트 실행 방법 명시 
 
- #### Todo List  
- 
-  1. scale in/out 으로 deploy 할 경우 rolling restart 컨테이터 이름 라벨 문제. -> count 개수가 아니라 컨테이너 이름 자체를 txt 파일로 w/r.
-  2. auto scaling : 스케일 인/아웃 자동화 스크립트  
+ ## DevOps 과정에 고민한 부분  
+  1. Auto Scaling : 스케일 인/아웃 자동화 방법     
+     - [docker-compose scale](https://docs.docker.com/compose/reference/scale/) 사용하면 되겟다. okay...
+     - 다음 작업은?  
+     - nginx proxy 설정파일 업데이트 자동화 (쉘로 어떻게 짜면 될 것 같다.)
+     - docker socket API 통신 (이것도 아름아름 찾아서 하면 될 것 같다...)
+     - 음... 생각보다 걱정되는 부분이 많아짐.  
+     - [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy) 를 뒤늦게 발견.
+     - 고민과 걱정 동시 해결! 
+     - **Thanks to jason wilder!**  
+      
+  2. Non-Disruptive Deploy :  무중단 배포시 서비스 상황 
+     - non-stop request 상황에서도 무중단 배포 서비스 유지  
+     - 컨테이너를 Rolling restart 하자. 
+     - nginx는 DownTime이 없어야 함으로, [nginx signal](http://nginx.org/en/docs/control.html)로 설정파일을 업데이트 하자.  
+     - nginx 설정 파일 수정을 어떻게 자동화 할것인가? -> auto scale 과 똑같은 문제 발생 
+     - [초라한 signal 명령](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L78) 한 줄은 지우고..  
+     - 다시한번, **Thanks to jason wilder!** 
+     
+   - 남은 작업 : printenv -> HOSTNAME(container id) health check 추가하기

@@ -2,36 +2,26 @@ version: '3'
 
 services:
 # nginx
- nginx: 
-  image: nginx:latest
-  container_name: nginx
+ nginx-proxy: 
+  image: jwilder/nginx-proxy
+  container_name: nginx-proxy
   volumes:
-    - ../nginx/conf/devops-nginx.conf:/etc/nginx/conf.d/default.conf
-    - ../nginx/log:/var/log/nginx
+    - /var/run/docker.sock:/tmp/docker.sock:ro
+    - ../logs/nginx/:/var/log/nginx
+  environment:   
+    - DEFAULT_HOST=webapp.local 
   ports:
-    - 80:80
+    - "80:80"
   networks:
     - devopsnet
-
 
 # webapp 
- webapp-1:
+ webapp:
   image: webapp:1.0.0
-  container_name: webapp-1
-  #ports:
-  #  - 8080:8080
   volumes:
-    - ../log/webapp01:/src/log 
-  networks:
-    - devopsnet
-
- webapp-2:
-  image: webapp:1.0.0
-  container_name: webapp-2
-  #ports:
-  #  - 8081:8080
-  volumes:
-    - ../log/webapp02:/src/log
+    - ../logs/webapp/:/src/log 
+  environment:
+    - VIRTUAL_HOST=webapp.local
   networks:
     - devopsnet
 
