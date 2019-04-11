@@ -1,18 +1,46 @@
 DevOps 프로젝트  
 --
  - 웹 어플리케이션을 Docker 를 통해 무중단 배포 서비스합니다. 
- - 구동 환경 : docker-ce, docker-compose, gradle
+ - 테스트 환경 
+    ~~~ 
+    - CentOS 7.1
+    - git version 1.8.3.1
+    - java version 
+       openjdk version "1.8.0_201"  
+       OpenJDK Runtime Environment (build 1.8.0_201-b09)  
+       OpenJDK 64-Bit Server VM (build 25.201-b09, mixed mode)  
+     
+    - Docker version 18.09.5, build e8ff056 
+    - docker-compose version 1.24.0, build 0aa59064
+    - Gradle 5.0
+    ~~~
  
-## 1. 스크립트 실행방법   
- - 스크립트 파일 :  [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh)  
+## 1. 프로젝트 실행 방법  
+ - 소스 코드 다운로드 및 devops.sh 실행
+    ~~~
+     $ git clone https://github.com/JungJinSu/spring-webservice-devops.git
+     $ cd spring-webservice-devops/scripts
+     $ ./devops.sh deploy 
+     Strartig Deploy Web App.
+     ======[01] Build Java File....
+     Starting a Gradle Daemon (subsequent builds will be faster)
+     BUILD SUCCESSFUL in 1m 47s
+             .
+             .
+     Creating nginx-proxy    ... done
+     Creating build_webapp_1 ... done
+    ~~~
+  
+ - [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh) 설명  
  
-        ./devops.sh [start | stop | restart | status | deploy]  
-        
- - start : 컨테이너 환경 전체 실행  
+        ./devops.sh [ deploy | stop |  start | restart | status ]  
+      
+ - deploy : 웹어플리케이션 무중단 배포   
  - stop : 컨테이너 환경 전체 중지  
+ - start : 컨테이너 환경 전체 실행 
  - restart : 컨테이너 환경 전체 재시작  
  - status : 컨테이너 환경 상태 확인  
- - deploy : 웹어플리케이션 무중단 배포  
+  
 
 ## 2. 스크립트 실행 예제 
 #### 예제1. 무중단 배포 스크립트 동작
@@ -106,7 +134,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
 ~~~
 
 #### 예제5. Container scale in/out 
- - [docker-compose scale](https://docs.docker.com/compose/reference/scale/) 옵션 사용 
+ - [docker-compose scale](https://docs.docker.com/compose/reference/scale/) 사용 
 #### 1. scale out  
       docker ps
       CONTAINER ID        IMAGE                 COMMAND                  CREATED             STATUS              PORTS                NAMES
@@ -178,23 +206,24 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
        
   11. README.md 파일에 프로젝트 실행 방법 명시 
 
- ## DevOps 과정에 고민한 부분  
+ ## DevOps 과정에 고민한 부분 
   1. Auto Scaling : 스케일 인/아웃 자동화 방법     
      - [docker-compose scale](https://docs.docker.com/compose/reference/scale/) 사용하면 되겟다. okay...
      - 다음 작업은?  
-     - nginx proxy 설정파일 업데이트 자동화 (쉘로 어떻게 짜면 될 것 같다.)
+     - nginx proxy 설정파일 자동화 (쉘로 어떻게 짜면 될 것 같다.)
      - docker socket API 통신 (이것도 아름아름 찾아서 하면 될 것 같다...)
-     - 음... 생각보다 걱정되는 부분이 많아짐.  
+     - 음... 생각보다 작업하며 버그.. 걱정되는 부분이 많아짐.  
      - [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy) 를 뒤늦게 발견.
-     - 고민과 걱정 동시 해결! 
      - **Thanks to jason wilder!**  
       
-  2. Non-Disruptive Deploy :  무중단 배포시 서비스 상황 
-     - non-stop request 상황에서도 무중단 배포 서비스 유지  
-     - 컨테이너를 Rolling restart 하자. 
-     - nginx는 DownTime이 없어야 함으로, [nginx signal](http://nginx.org/en/docs/control.html)로 설정파일을 업데이트 하자.  
-     - nginx 설정 파일 수정을 어떻게 자동화 할것인가? -> auto scale 과 똑같은 문제 발생 
-     - [초라한 signal 명령](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L78) 한 줄은 지우고..  
+  2. Non Interruptive Deploy : 무중단 배포시 실시간 서비스 유지 
+     - non-stop request 상황에서도 실시간 서비스는 유지되어야한다.  
+     - nginx는 DownTime이 없어야 하므로, [nginx signal](http://nginx.org/en/docs/control.html)로 설정파일만 reload 하자.  
+     - 컨테이너를 Rolling restart 하자.  
+     - nginx upstream 설정은 어떻게 자동화 할것인가..? 
+     - auto scale과 똑같은 고민. 
      - 다시한번, **Thanks to jason wilder!** 
      
-   - 남은 작업 : printenv -> HOSTNAME(container id) health check 추가하기
+   - 개선할 부분 : 
+     - 어플리케이션(jar파일)을 복수개(데몬) 또는 버전별로 구성할 경우 
+     - dockerfile, Rolling restart 부분에 수정 필요. 

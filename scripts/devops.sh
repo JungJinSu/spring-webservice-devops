@@ -67,12 +67,13 @@ deploy() {
   # docker-scale-member.txt 파일 기준으로 Rolling Restart. Nginx 제외.    
   WebAppContainerScale=$(cat docker-scale-member.txt | wc -l | grep -o "[0-9]\+")
   NGINXCONTAINERID=$(docker ps -q -f "name=nginx-proxy")
-  echo "======[03] Rolling Restart WebApp docker service... [total : $WebAppContainerScale]"
+  echo "======[03] Rolling Restart WebApp docker service... [total : $(($WebAppContainerScale - $NGINXCOUNT))]"
   cat docker-scale-member.txt |\
   while read line
     do
      if ! [ $NGINXCONTAINERID == $line ];then
         echo "Restarting.... WebAPP Container : $line"
+        docker cp $TARGETPATH/. $line:/src/
         docker restart $line
      fi
   done
