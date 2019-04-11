@@ -194,10 +194,10 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
     : nginx-proxy Default Round robin LB.   
     
   8.  무중단 배포 동작을 구현 (배포 방식에 제한 없음)  
-    : [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L35)  
+    : [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L36)  
    
   9. 실행스크립트 개발언어는 bash/python/go 선택하여 작성  
-    : [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L1)  
+    : [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh)  
    
   10.  어플리케이션 REST API 추가  
      - [GET /health] Health check  
