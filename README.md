@@ -162,7 +162,8 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
     : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1)  
  
   7. 웹서버는 Reverse proxy 80 port, Round robin 방식으로 설정  
-    : [spring-webservice-devops/nginx/conf/devops-nginx.conf](https://github.com/JungJinSu/spring-webservice-devops/blob/master/nginx/conf/devops-nginx.conf#L6)  
+    : [/spring-webservice-devops/build/docker-compose.yml](https://github.com/JungJinSu/spring-webservice-devops/blob/master/build/docker-compose.yml#L1)  
+    : nginx-proxy Default Round robin LB.   
     
   8.  무중단 배포 동작을 구현 (배포 방식에 제한 없음)  
     : [/spring-webservice-devops/scripts/devops.sh](https://github.com/JungJinSu/spring-webservice-devops/blob/master/scripts/devops.sh#L35)  
