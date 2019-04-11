@@ -212,7 +212,7 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
      - 다음 작업은?  
      - nginx proxy 설정파일 자동화 (쉘로 어떻게 짜면 될 것 같다.)
      - docker socket API 통신 (이것도 아름아름 찾아서 하면 될 것 같다...)
-     - 음... 생각보다 작업하며 버그.. 걱정되는 부분이 많아짐.  
+     - 음... 생각보다 작업중에 고려해야 하는 부분이 많아짐. 
      - [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy) 를 뒤늦게 발견.
      - **Thanks to jason wilder!**  
       
@@ -220,10 +220,6 @@ CONTAINER ID        IMAGE               COMMAND                  CREATED        
      - non-stop request 상황에서도 실시간 서비스는 유지되어야한다.  
      - nginx는 DownTime이 없어야 하므로, [nginx signal](http://nginx.org/en/docs/control.html)로 설정파일만 reload 하자.  
      - 컨테이너를 Rolling restart 하자.  
-     - nginx upstream 설정은 어떻게 자동화 할것인가..? 
-     - auto scale과 똑같은 고민. 
+     - nginx upstream 설정은 어떻게 자동화 할것인가..?  auto scale 과 같은 고민. 
      - 다시한번, **Thanks to jason wilder!** 
-     
-   - 개선할 부분 : 
-     - 어플리케이션(jar파일)을 복수개(데몬) 또는 버전별로 구성할 경우 
-     - dockerfile, Rolling restart 부분에 수정 필요. 
+      
